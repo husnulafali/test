@@ -15,5 +15,5 @@
         </div>
     </div>
     <button class="btn btn-primary mt-1 btn-get-data">Filter</button>
-    <span id="loading-filter" style="display: none;">Loading...</span>
+    <span id="loading-filter" style="display: none;">Load data ...</span>
 </div>
