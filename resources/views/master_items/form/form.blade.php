@@ -1,4 +1,4 @@
-<form method="POST">
+<form method="POST" enctype="multipart/form-data">
     @csrf
     @if($method == 'edit')
     <div class="form-group">
@@ -31,7 +31,7 @@
             <option @if($selected == 'Bukulapuk') selected @endif>Bukulapuk</option>
             <option @if($selected == 'TokoBagas') selected @endif>TokoBagas</option>
             <option @if($selected == 'E Commurz') selected @endif>E Commurz</option>
-            <optio @if($selected == 'Blublu') selected @endif>Blublu</option>
+            <option @if($selected == 'Blublu') selected @endif>Blublu</option>
         </select>
     </div>
 
@@ -43,11 +43,29 @@
             <option @if($selected == 'Obat') selected @endif>Obat</option>
             <option @if($selected == 'Alkes') selected @endif>Alkes</option>
             <option @if($selected == 'Matkes') selected @endif>Matkes</option>
-            <optio @if($selected == 'Umum') selected @endif>Umum</option>
-            <optio @if($selected == 'ATK') selected @endif>ATK</option>
+            <option @if($selected == 'Umum') selected @endif>Umum</option>
+            <option @if($selected == 'ATK') selected @endif>ATK</option>
         </select>
     </div>
 
-    <button class="btn btn-primary mt-3">Submit</button>
+    @php $selected = $item->category ?? ''; @endphp
+    <div class="form-group">
+        <label>Kategori</label>
+        <select class="form-control" required name="kategori" required>
+            <option @if($selected == '') selected @endif value="">--Pilih--</option>
+            @foreach ($categories as $category)
+            <option value="{{ $category->id }}"
+                {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                {{ $category->nama }}
+            </option>
+        @endforeach
+        </select>
+    </div>
 
+    <div class="form-group">
+        <label>Foto</label>
+        <input type="file" class="form-control" id="photoUrl" name="photoUrl" required>
+    </div>
+
+    <button class="btn btn-primary mt-3">Submit</button>
 </form>

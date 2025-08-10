@@ -12,6 +12,12 @@
 
                 <div class="card-body">
                     <table>
+                        
+                          <tr>
+                                <th>Kode</th>
+                                <td>:</td>
+                                <td>{{ $data->kode }}</td>
+                            </tr>
                         <tr>
                             <th>Nama</th>
                             <td>:</td>
@@ -53,3 +59,6 @@
 @endsection
 @section('js')
 @endsection
+
+
+

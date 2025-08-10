@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CategoryItem;
+use App\Models\CategoryItems;
+use App\Models\MasterCategory;
 use App\Models\MasterItem;
 use Illuminate\Http\Request;
 
@@ -19,14 +22,14 @@ class MasterItemsController extends Controller
         $hargamin = $request->hargamin;
         $hargamax = $request->hargamax;
 
-        $data_search = MasterItem::query();
+        $data_search = MasterItem::with('categories');
 
         if (!empty($kode)) $data_search = $data_search->where('kode', $kode);
         if (!empty($nama)) $data_search = $data_search->where('nama', 'LIKE', '%' . $nama . '%');
-        if (!empty($hargamin)) $data_search = $data_search->where('harga_beli', '>=', $hargamin)->where('harga_beli', '<=', $hargamax);
+        if (!empty($hargamin)) $data_search = $data_search->where('harga_beli', '>=', $hargamin);
+        if (!empty($hargamax)) $data_search = $data_search->where('harga_beli', '<=', $hargamax);
 
-        $data_search = $data_search->select('kode', 'nama', 'jenis', 'harga_beli', 'laba', 'supplier')->orderBy('id')->get();
-
+        $data_search = $data_search->orderBy('id')->get();
 
         return json_encode([
             'status' => 200,
@@ -43,6 +46,7 @@ class MasterItemsController extends Controller
         }
         $data['item'] = $item;
         $data['method'] = $method;
+        $data['categories'] = MasterCategory::all();
         return view('master_items.form.index', $data);
     }
 
@@ -54,15 +58,24 @@ class MasterItemsController extends Controller
 
     public function formSubmit(Request $request, $method, $id = 0)
     {
+        $category = MasterCategory::findOrFail($request->kategori);
+
         if ($method == 'new') {
             $data_item = new MasterItem;
             $kode = MasterItem::count('id');
             $kode = $kode + 1;
             $kode = str_pad($kode, 5, '0', STR_PAD_LEFT);
-            sleep(3);
+            sleep(3);       
         } else {
             $data_item = MasterItem::find($id);
             $kode = $data_item->kode;
+
+            $category_item = CategoryItem::where('master_category_id','=',$category->id)
+            ->where('master_item_id','=',$data_item->id);
+            
+            $category_item->update([
+                'master_category_id'=>$request->kategori,
+            ]);
         }
 
         $data_item->nama = $request->nama;
@@ -72,6 +85,13 @@ class MasterItemsController extends Controller
         $data_item->supplier = $request->supplier;
         $data_item->jenis = $request->jenis;
         $data_item->save();
+
+        if($method == "new"){
+            $category_item = CategoryItem::create([
+                'master_category_id' => $category->id,
+                'master_item_id' => $data_item->id,
+            ]);
+        }
 
         return redirect('master-items');
     }

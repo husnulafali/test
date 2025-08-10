@@ -29,6 +29,18 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <!-- Left Side Of Navbar -->
+                    <ul class="navbar-nav me-auto">
+                        <li>
+                            <a href="{{ url('/master-items') }}" style="margin-right: 5px">Master Item</a>
+                        </li>
+                        <li>
+                            <a href="{{ url('/master-categories') }}">Master Kategori</a>
+                        </li>
+                    </ul>
+
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
